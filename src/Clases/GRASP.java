@@ -6,6 +6,8 @@
 package Clases;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -42,8 +44,8 @@ public class GRASP {
             System.out.println("Se inicia desde el punto (x: " + initialPoint[0] + " ,y: " + initialPoint[1] + ")");
             int actual = this.initialPoint;
             for (int i = 0; i < this.t; i++) {
-                int[] mejores = this.myGrafo.getLowestValues(actual, 5);
-                System.out.println(Arrays.toString(mejores));
+                int[] mejores = this.myGrafo.getLowestValues(actual, 5, camino);
+//                System.out.println(Arrays.toString(mejores));
                 double total = 0;
                 double random = Math.random();
                 for (int j = 0; j < mejores.length; j++) {
@@ -56,10 +58,9 @@ public class GRASP {
                     probabilidades[j] = this.myGrafo.getScoreAtIndex(mejores[j]) / total ;
                     suma += probabilidades[j];
                     if (seleccionado == mejores.length && suma > random){
-                        seleccionado = j;
+                        seleccionado = mejores[j];
                     }
                 }
-
                 //Preparar
                 camino[i] = seleccionado;
                 actual = seleccionado;
@@ -68,21 +69,29 @@ public class GRASP {
             if (this.results != null){
                 System.out.println("No es nulo");
                 if(this.results.length > 1){
-                    System.out.println("ya esta haciendo validacion");
-                    System.out.println( this.myGrafo.getTotalScore(this.results[soluciones]) );
-                    System.out.println( this.myGrafo.getTotalScore(this.results[soluciones - 1]) );
+//                    System.out.println("ya esta haciendo validacion");
+//                    System.out.println( this.myGrafo.getTotalScore(this.results[soluciones]) );
+//                    System.out.println( this.myGrafo.getTotalScore(this.results[soluciones - 1]) );
                     validacion = ( this.myGrafo.getTotalScore(this.results[soluciones]) <= this.myGrafo.getTotalScore(this.results[soluciones - 1]) );
                 }
             }
             soluciones ++;
         }while(!validacion);
         
+        int[] mejorActual = this.results[this.results.length - 1];
         System.out.println("");
         System.out.println("Mejores");
         System.out.println("");
         for (int i = 0; i < this.results.length; i++) {
             System.out.println(Arrays.toString(this.results[i]));
+            System.out.println(this.myGrafo.getTotalScore(this.results[i]));
         }
+        
+        System.out.println("");
+        System.out.println("La mejor solucion es el camino: " + Arrays.toString(mejorActual));
+        System.out.println("Distancia: " + this.myGrafo.getTotalDistance(mejorActual));
+        System.out.println("Puntaje: " + this.myGrafo.getTotalScore(mejorActual));
+        System.out.println("");
         
     }
     

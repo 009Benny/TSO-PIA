@@ -56,15 +56,17 @@ public class Grafo {
         return this.lista[index];
     }
     
-    public int[] getLowestValues(int punto, int cantidad){
+    public int[] getLowestValues(int punto, int cantidad, int[]excepciones){
         int[] lowValues = new int[cantidad];
         double[] fila = this.matriz[punto];
+//        System.out.println("camino");
+//        System.out.println(Arrays.toString(excepciones));
         for (int i = 0; i < cantidad; i++) {
             double menor = 0;
             int indexMenor = 0;
             for (int j = 0; j < fila.length; j++) {
                 double actual = fila[j];
-                if (actual > 0 && !contains(lowValues, j) ){
+                if (actual > 0 && !contains(lowValues, j) && !contains(excepciones, j) ){
                     if (menor == 0 || menor > actual){
                         menor = actual;
                         indexMenor = j;
@@ -84,9 +86,18 @@ public class Grafo {
         double suma = 0;
         for (int i = 0; i < camino.length; i++) {
             suma += this.getScoreAtIndex(camino[i]);
-            System.out.println(this.getScoreAtIndex(camino[i]));
+//            System.out.println(this.getScoreAtIndex(camino[i]));
         }
         return suma;
+    }
+    
+    public double getTotalDistance(int[] camino){
+        double distancia = 0;
+        for (int i = 1; i < camino.length - 1; i++) {
+            double value = this.matriz[camino[i-1]][camino[i]];
+            distancia += value;
+        }
+        return distancia;
     }
     
     public static boolean contains(final int[] arr, final int key) {
